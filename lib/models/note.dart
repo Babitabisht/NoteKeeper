@@ -47,8 +47,4 @@ class Note {
     map["date"] = _date;
     map["priorty"] = _priorty;
   }
-
-
-
-  
 }
