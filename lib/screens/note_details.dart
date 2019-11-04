@@ -30,110 +30,106 @@ class _NoteDetailsState extends State<NoteDetails> {
     t1.text = note.title;
     t2.text = note.description;
 
-    return WillPopScope(
-      onWillPop: () {
-        moveToLastScreen();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(appBarTitle),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: moveToLastScreen(),
-          ),
-        ),
-        body: Padding(
-          padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
-          child: ListView(
-            children: <Widget>[
-              ListTile(
-                title: DropdownButton(
-                  items: _priorties.map((String dropdownItem) {
-                    return DropdownMenuItem<String>(
-                        value: dropdownItem, child: Text(dropdownItem));
-                  }).toList(),
-                  style: textStyle,
-                  value: changeToString(note.priorty),
-                  onChanged: (value) {
-                    setState(() {
-                      changeToInt(value);
-                      debugPrint(" ss clicked $value");
-                    });
-                  },
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(appBarTitle),
+        // leading: IconButton(
+        //   icon: Icon(Icons.arrow_back),
+        //   onPressed: moveToLastScreen(),
+        // ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+              title: DropdownButton(
+                items: _priorties.map((String dropdownItem) {
+                  return DropdownMenuItem<String>(
+                      value: dropdownItem, child: Text(dropdownItem));
+                }).toList(),
+                style: textStyle,
+                value: changeToString(note.priorty),
+                onChanged: (value) {
+                  setState(() {
+                    debugPrint(" ss clicked $value");
+
+                    changeToInt(value);
+                  });
+                },
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: TextField(
-                  controller: t1,
-                  style: textStyle,
-                  onChanged: (value) {
-                    updateTitle();
-                    debugPrint(value);
-                  },
-                  decoration: InputDecoration(
-                      labelText: "Title",
-                      labelStyle: textStyle,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0))),
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: TextField(
+                controller: t1,
+                style: textStyle,
+                onChanged: (value) {
+                  updateTitle();
+                  debugPrint(value);
+                },
+                decoration: InputDecoration(
+                    labelText: "Title",
+                    labelStyle: textStyle,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: TextField(
-                  controller: t2,
-                  style: textStyle,
-                  onChanged: (value) {
-                    updateDescription();
-                    debugPrint(value);
-                  },
-                  decoration: InputDecoration(
-                      labelText: "Discription",
-                      labelStyle: textStyle,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0))),
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: TextField(
+                controller: t2,
+                style: textStyle,
+                onChanged: (value) {
+                  updateDescription();
+                  debugPrint(value);
+                },
+                decoration: InputDecoration(
+                    labelText: "Discription",
+                    labelStyle: textStyle,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: RaisedButton(
-                        child: Text(
-                          "Save",
-                          textScaleFactor: 1.5,
-                        ),
-                        color: Theme.of(context).primaryColorDark,
-                        textColor: Theme.of(context).primaryColorLight,
-                        onPressed: () {
-                          _save();
-                          //debugPrint(value);
-                        },
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: RaisedButton(
+                      child: Text(
+                        "Save",
+                        textScaleFactor: 1.5,
                       ),
+                      color: Theme.of(context).primaryColorDark,
+                      textColor: Theme.of(context).primaryColorLight,
+                      onPressed: () {
+                        _save();
+                        //debugPrint(value);
+                      },
                     ),
-                    Container(
-                      width: 5.0,
-                    ),
-                    Expanded(
-                      child: RaisedButton(
-                        child: Text(
-                          "Delete",
-                          textScaleFactor: 1.5,
-                        ),
-                        color: Theme.of(context).primaryColorDark,
-                        textColor: Theme.of(context).primaryColorLight,
-                        onPressed: () {
-                          _delete();
-                          //debugPrint(value);
-                        },
+                  ),
+                  Container(
+                    width: 5.0,
+                  ),
+                  Expanded(
+                    child: RaisedButton(
+                      child: Text(
+                        "Delete",
+                        textScaleFactor: 1.5,
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
+                      color: Theme.of(context).primaryColorDark,
+                      textColor: Theme.of(context).primaryColorLight,
+                      onPressed: () {
+                        _delete();
+                        //debugPrint(value);
+                      },
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -177,6 +173,7 @@ class _NoteDetailsState extends State<NoteDetails> {
 
   _save() async {
     moveToLastScreen();
+    debugPrint("In save method");
 
     note.date = DateFormat.yMMMd().format(DateTime.now());
     int result;
@@ -186,7 +183,9 @@ class _NoteDetailsState extends State<NoteDetails> {
       result = await helper.insertNote(note);
     }
 
-    if (result != 0) {
+    debugPrint("after save method $result");
+
+    if (result == 0) {
       _showAlert("status", "Not saved !");
     } else {
       _showAlert("status", "saved successfully");

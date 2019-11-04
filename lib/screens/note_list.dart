@@ -44,7 +44,7 @@ class _NoteListState extends State<NoteList> {
     TextStyle titleStyle = Theme.of(context).textTheme.subhead;
 
     return ListView.builder(
-      itemCount: count,
+      itemCount: noteList == null ? 0 : noteList.length,
       itemBuilder: (BuildContext context, int position) {
         return Card(
           color: Colors.white,
@@ -140,6 +140,8 @@ class _NoteListState extends State<NoteList> {
       Future<List<Note>> noteListFuture = databaseHelper.getNoteList();
       noteListFuture.then((notes) => {
             setState(() {
+              debugPrint("----------------------notes $notes");
+
               this.noteList = notes;
               this.count = notes.length;
             })
