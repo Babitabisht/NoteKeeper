@@ -1,28 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:note_keeper/models/note.dart';
+import 'package:note_keeper/utils/database_helper.dart';
 
 class NoteDetails extends StatefulWidget {
-  String appBarTitle;
-
-  NoteDetails(this.appBarTitle);
+  final String appBarTitle;
+  final Note note;
+  NoteDetails(this.note, this.appBarTitle);
 
   @override
-  _NoteDetailsState createState() => _NoteDetailsState(this.appBarTitle);
+  _NoteDetailsState createState() =>
+      _NoteDetailsState(this.note, this.appBarTitle);
 }
 
 class _NoteDetailsState extends State<NoteDetails> {
   String appBarTitle;
-
+  Note note;
   static var _priorties = ["High", "Low"];
+  DatabaseHelper helper = DatabaseHelper();
   TextEditingController t1 = TextEditingController();
   TextEditingController t2 = TextEditingController();
 
-  _NoteDetailsState(this.appBarTitle);
+  _NoteDetailsState(this.note, this.appBarTitle);
 
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
+
+    t1.text = note.title;
+    t2.text = note.description;
+
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         moveToLastScreen();
       },
       child: Scaffold(
@@ -44,9 +53,10 @@ class _NoteDetailsState extends State<NoteDetails> {
                         value: dropdownItem, child: Text(dropdownItem));
                   }).toList(),
                   style: textStyle,
-                  value: "Low",
+                  value: changeToString(note.priorty),
                   onChanged: (value) {
                     setState(() {
+                      changeToInt(value);
                       debugPrint(" ss clicked $value");
                     });
                   },
@@ -58,6 +68,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                   controller: t1,
                   style: textStyle,
                   onChanged: (value) {
+                    updateTitle();
                     debugPrint(value);
                   },
                   decoration: InputDecoration(
@@ -73,6 +84,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                   controller: t2,
                   style: textStyle,
                   onChanged: (value) {
+                    updateDescription();
                     debugPrint(value);
                   },
                   decoration: InputDecoration(
@@ -95,6 +107,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                         color: Theme.of(context).primaryColorDark,
                         textColor: Theme.of(context).primaryColorLight,
                         onPressed: () {
+                          _save();
                           //debugPrint(value);
                         },
                       ),
@@ -111,6 +124,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                         color: Theme.of(context).primaryColorDark,
                         textColor: Theme.of(context).primaryColorLight,
                         onPressed: () {
+                          _delete();
                           //debugPrint(value);
                         },
                       ),
@@ -126,6 +140,80 @@ class _NoteDetailsState extends State<NoteDetails> {
   }
 
   moveToLastScreen() {
-    Navigator.pop(context);
+    Navigator.pop(context, true);
+  }
+
+  changeToInt(String prior) {
+    switch (prior) {
+      case "High":
+        note.priorty = 1;
+        break;
+      case "Low":
+        note.priorty = 2;
+        break;
+    }
+  }
+
+  changeToString(int prior) {
+    String priority;
+    switch (prior) {
+      case 1:
+        priority = "High";
+        break;
+      case 2:
+        priority = "Low";
+        break;
+    }
+    return priority;
+  }
+
+  updateTitle() {
+    note.title = t1.text;
+  }
+
+  updateDescription() {
+    note.description = t2.text;
+  }
+
+  _save() async {
+    moveToLastScreen();
+
+    note.date = DateFormat.yMMMd().format(DateTime.now());
+    int result;
+    if (note.id != null) {
+      result = await helper.updateNote(note);
+    } else {
+      result = await helper.insertNote(note);
+    }
+
+    if (result != 0) {
+      _showAlert("status", "Not saved !");
+    } else {
+      _showAlert("status", "saved successfully");
+    }
+  }
+
+  _showAlert(String title, String message) {
+    AlertDialog dialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => dialog);
+  }
+
+  _delete() async {
+    moveToLastScreen();
+
+    if (note.id == null) {
+      _showAlert("Status", "No note available to be deleted");
+    }
+
+    int result = await helper.deleteNote(note.id);
+
+    if (result != 0) {
+      _showAlert("Status", "Note deleted successfully !");
+    } else {
+      _showAlert("Status", "Not Deleted yet, try Again !");
+    }
   }
 }

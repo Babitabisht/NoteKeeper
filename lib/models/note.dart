@@ -32,8 +32,8 @@ class Note {
     }
   }
 
-  set date(String new_date) {
-    this._date = new_date;
+  set date(String newDate) {
+    this._date = newDate;
   }
 
   Map<String, dynamic> toMap() {
@@ -46,5 +46,15 @@ class Note {
     map["description"] = _description;
     map["date"] = _date;
     map["priorty"] = _priorty;
+    return map;
+  }
+
+  // Extract a Note object from a Map object
+  Note.fromMapObject(Map<String, dynamic> map) {
+    this._id = map['id'];
+    this._title = map['title'];
+    this._description = map['description'];
+    this._priorty = map['priority'];
+    this._date = map['date'];
   }
 }
