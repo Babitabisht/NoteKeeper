@@ -41,11 +41,14 @@ class Note {
     if (_id != null) {
       map["id"] = _id;
     }
+    print(
+        "id = $id, titile $title, description $description, priority $_priorty");
 
     map["title"] = _title;
     map["description"] = _description;
     map["date"] = _date;
     map["priorty"] = _priorty;
+    print("priority....$map");
     return map;
   }
 
@@ -54,7 +57,7 @@ class Note {
     this._id = map['id'];
     this._title = map['title'];
     this._description = map['description'];
-    this._priorty = map['priority'];
+    this._priorty = map['priorty'];
     this._date = map['date'];
   }
 }

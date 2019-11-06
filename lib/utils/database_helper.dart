@@ -12,7 +12,7 @@ class DatabaseHelper {
   String colId = 'id';
   String colTitle = 'title';
   String colDescription = 'description';
-  String colPriority = 'priorty';
+  String colPriorty = 'priorty'; //priorty
   String colDate = 'date';
 
   DatabaseHelper._createInstance(); // Named constructor to create instance of DatabaseHelper
@@ -46,7 +46,7 @@ class DatabaseHelper {
   void _createDb(Database db, int newVersion) async {
     await db.execute(
         'CREATE TABLE $noteTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, '
-        '$colDescription TEXT, $colPriority INTEGER, $colDate TEXT)');
+        '$colDescription TEXT, $colPriorty INTEGER, $colDate TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database
@@ -54,7 +54,7 @@ class DatabaseHelper {
     Database db = await this.database;
 
 //		var result = await db.rawQuery('SELECT * FROM $noteTable order by $colPriority ASC');
-    var result = await db.query(noteTable, orderBy: '$colPriority ASC');
+    var result = await db.query(noteTable, orderBy: '$colPriorty ASC');
     return result;
   }
 
@@ -70,6 +70,9 @@ class DatabaseHelper {
 
   // Update Operation: Update a Note object and save it to database
   Future<int> updateNote(Note note) async {
+    var a = note.priorty;
+    print("---this is priority in update note $a");
+
     var db = await this.database;
     var result = await db.update(noteTable, note.toMap(),
         where: '$colId = ?', whereArgs: [note.id]);
@@ -95,7 +98,12 @@ class DatabaseHelper {
 
   // Get the 'Map List' [ List<Map> ] and convert it to 'Note List' [ List<Note> ]
   Future<List<Note>> getNoteList() async {
-    var noteMapList = await getNoteMapList(); // Get 'Map List' from database
+    var noteMapList = await getNoteMapList();
+    var a = noteMapList[0];
+    print(
+        "---################################################################-$a");
+
+    // Get 'Map List' from database
     int count =
         noteMapList.length; // Count the number of map entries in db table
 

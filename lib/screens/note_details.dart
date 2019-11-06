@@ -173,10 +173,12 @@ class _NoteDetailsState extends State<NoteDetails> {
 
   _save() async {
     moveToLastScreen();
-    debugPrint("In save method");
+    var a = note.priorty;
+    debugPrint("In save method, $a");
 
     note.date = DateFormat.yMMMd().format(DateTime.now());
     int result;
+
     if (note.id != null) {
       result = await helper.updateNote(note);
     } else {
@@ -185,10 +187,10 @@ class _NoteDetailsState extends State<NoteDetails> {
 
     debugPrint("after save method $result");
 
-    if (result == 0) {
-      _showAlert("status", "Not saved !");
-    } else {
+    if (result != 0) {
       _showAlert("status", "saved successfully");
+    } else {
+      _showAlert("status", "Not saved !");
     }
   }
 

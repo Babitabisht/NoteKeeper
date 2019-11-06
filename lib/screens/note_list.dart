@@ -32,7 +32,7 @@ class _NoteListState extends State<NoteList> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           debugPrint("pressing FAB");
-          navigateToDetails(Note("", 2, ""), "Add");
+          navigateToDetails(Note("", 1, ""), "Add");
         },
         tooltip: "Add note",
         child: Icon(Icons.add),
@@ -91,9 +91,9 @@ class _NoteListState extends State<NoteList> {
     Scaffold.of(context).showSnackBar(snackbar);
   }
 
-  Color getPriorityColor(int priority) {
-    print("priority is $priority");
-    switch (priority) {
+  Color getPriorityColor(int priorty) {
+    print("priority is $priorty");
+    switch (priorty) {
       case 1:
         return Colors.red;
         break;
@@ -101,7 +101,7 @@ class _NoteListState extends State<NoteList> {
         return Colors.yellow;
         break;
       default:
-        return Colors.yellow;
+        return Colors.greenAccent;
     }
   }
 
@@ -119,6 +119,9 @@ class _NoteListState extends State<NoteList> {
   }
 
   navigateToDetails(Note note, String title) async {
+    var a = note.priorty;
+    debugPrint("navigateToDetails ....$a");
+
     bool result =
         await Navigator.push(context, MaterialPageRoute(builder: (context) {
       debugPrint("title, $title");
@@ -140,9 +143,11 @@ class _NoteListState extends State<NoteList> {
       Future<List<Note>> noteListFuture = databaseHelper.getNoteList();
       noteListFuture.then((notes) => {
             setState(() {
-              debugPrint("----------------------notes $notes");
 
               this.noteList = notes;
+              var a = notes[0].priorty;
+              debugPrint("Note in updateListView , $a");
+
               this.count = notes.length;
             })
           });
