@@ -55,6 +55,9 @@ class _NoteDetailsState extends State<NoteDetails> {
                     debugPrint(" ss clicked $value");
 
                     changeToInt(value);
+                    debugPrint(
+                      "note.priorty ${note.priorty}",
+                    );
                   });
                 },
               ),
@@ -140,6 +143,8 @@ class _NoteDetailsState extends State<NoteDetails> {
   }
 
   changeToInt(String prior) {
+    debugPrint("---------change to int----------$prior");
+
     switch (prior) {
       case "High":
         note.priorty = 1;
@@ -154,10 +159,11 @@ class _NoteDetailsState extends State<NoteDetails> {
     String priority;
     switch (prior) {
       case 1:
-        priority = "High";
+        priority = _priorties[0];
+        ;
         break;
       case 2:
-        priority = "Low";
+        priority = _priorties[1];
         break;
     }
     return priority;

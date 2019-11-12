@@ -27,8 +27,12 @@ class Note {
   }
 
   set priorty(int newpriorty) {
-    if (newpriorty <= 1 && newpriorty <= 2) {
+    print("In set method of priority $newpriorty");
+    if (newpriorty >= 1 && newpriorty <= 2) {
+      print("In set priority  ");
       this._priorty = newpriorty;
+    } else {
+      print("cant set priority");
     }
   }
 
